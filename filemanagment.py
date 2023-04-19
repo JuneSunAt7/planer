@@ -10,7 +10,10 @@ def read_curr():
             columns = line.split(',')
             s += str(columns[0]+' '+columns[1]+' '+columns[2]+' '+columns[3]).replace('"', '')
     s = s.replace("task deadline diff resources", '')
-    parse = s.strip('[]').replace("\r\n", "").split(' ')
+
+    s = s.replace("\n", ',')
+    parse = s.strip('[]').replace("\r", "").split(',')
+    parse.pop(0)
     print(parse)
 
     return parse
@@ -32,8 +35,11 @@ def m_to_archive():
     pass
 
 
-def wr_to_main_file():
-    pass
+def wr_to_main_file(taskname, deadline, diff, resources):
+    data = taskname+','+ deadline+','+ diff+','+ resources
+
+    with open('file.csv', 'a') as file:
+        file.write('\n'+data)
 
 
 def delete():

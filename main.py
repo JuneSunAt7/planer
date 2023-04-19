@@ -5,6 +5,7 @@ import filemanagment
 from PyQt5.QtWidgets import QTableWidgetItem
 from datetime import datetime
 
+
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -15,21 +16,16 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.fireTaskButton.clicked.connect(self.fire_task)
         self.weekButton.clicked.connect(self.week_task)
         self.archiveButton.clicked.connect(self.arc_task)
+        self.bthAdd.clicked.connect(self.save)
 
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
         self.fireTasksFrame.setVisible(False)
         self.weekFrame.setVisible(False)
-
-        self.tableWidget.setItem(0, 0, QTableWidgetItem(filemanagment.read_curr()[0]))
-        self.tableWidget.setItem(0, 1, QTableWidgetItem(filemanagment.read_curr()[1]))
-        self.tableWidget.setItem(0,3, QTableWidgetItem(filemanagment.read_curr()[2]))
-
-        date = datetime.strptime(filemanagment.read_curr()[1], "%d.%m.%Y").date()
-        today = datetime.today().date()
-        print(today)
-        self.tableWidget.setItem(0, 2, QTableWidgetItem(str(date)))
-        self.tableWidget.setItem(0, 4, QTableWidgetItem(filemanagment.read_curr()[3]))
+        for j in range(len(filemanagment.read_curr())):
+            for i in range(4):
+                data = filemanagment.read_curr()[j].split(' ')
+                self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
 
     def __clear(self):
         self.frame.setVisible(False)
@@ -57,6 +53,10 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def arc_task(self):
         self.__clear()
         self.archiveData.setVisible(True)
+
+    def save(self):
+        times = self.deadlineTime.date().toPyDate()
+        filemanagment.wr_to_main_file(self.lineInputTask.text(), str(times), 'hello', 'hello')
 
 
 def main():
