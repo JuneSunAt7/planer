@@ -5,10 +5,10 @@ from PyQt5 import QtWidgets  # for message about errors
 
 def read_curr():
     s = ''
-    with open('file.csv', newline='') as csvfile:
+    with open('CURR.csv', newline='') as csvfile:
         for line in csvfile:
-            columns = line.split(',')
-            s += str(columns[0]+' '+columns[1]+' '+columns[2]+' '+columns[3]).replace('"', '')
+            columns = line.split(';')
+            s += str(str(columns[0]) +'.'+columns[1]+'.'+columns[2]+'.'+columns[3])
     s = s.replace("task deadline diff resources", '')
 
     s = s.replace("\n", ',')
@@ -20,11 +20,35 @@ def read_curr():
 
 
 def read_fired():
-    pass
+    s = ''
+    with open('FIRE.csv', newline='') as csvfile:
+        for line in csvfile:
+            columns = line.split(',')
+            s += str(columns[0] + ' ' + columns[1] + ' ' + columns[2] + ' ' + columns[3]).replace('"', '')
+    s = s.replace("task deadline diff resources", '')
+
+    s = s.replace("\n", ',')
+    parse = s.strip('[]').replace("\r", "").split(',')
+    parse.pop(0)
+    print(parse)
+
+    return parse
 
 
 def read_arc():
-    pass
+    s = ''
+    with open('ARC.csv', newline='') as csvfile:
+        for line in csvfile:
+            columns = line.split(',')
+            s += str(columns[0] + ' ' + columns[1] + ' ' + columns[2] + ' ' + columns[3]).replace('"', '')
+    s = s.replace("task deadline diff resources", '')
+
+    s = s.replace("\n", ',')
+    parse = s.strip('[]').replace("\r", "").split(',')
+    parse.pop(0)
+    print(parse)
+
+    return parse
 
 
 def m_to_fired():
@@ -36,9 +60,9 @@ def m_to_archive():
 
 
 def wr_to_main_file(taskname, deadline, diff, resources):
-    data = taskname+','+ deadline+','+ diff+','+ resources
+    data = taskname+';'+ deadline+';'+ diff+';'+ resources
 
-    with open('file.csv', 'a') as file:
+    with open('CURR.csv', 'a') as file:
         file.write('\n'+data)
 
 

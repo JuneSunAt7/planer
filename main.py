@@ -18,13 +18,17 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.archiveButton.clicked.connect(self.arc_task)
         self.bthAdd.clicked.connect(self.save)
 
+        self.difficultSlider.setRange(0, 5)
+        self.difficultSlider.setValue(3)
+
+
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
         self.fireTasksFrame.setVisible(False)
         self.weekFrame.setVisible(False)
         for j in range(len(filemanagment.read_curr())):
             for i in range(4):
-                data = filemanagment.read_curr()[j].split(' ')
+                data = filemanagment.read_curr()[j].split('.')
                 self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
 
     def __clear(self):
@@ -56,7 +60,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def save(self):
         times = self.deadlineTime.date().toPyDate()
-        filemanagment.wr_to_main_file(self.lineInputTask.text(), str(times), 'hello', 'hello')
+        filemanagment.wr_to_main_file(str(self.lineInputTask.text()), str(times), str(self.difficultSlider.value()), str(self.resoursesList.toPlainText()))
 
 
 def main():
@@ -64,6 +68,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     window = ExampleApp()
     window.show()
+    window.setFixedSize(940, 732)
     app.exec_()
 
 
