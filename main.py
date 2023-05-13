@@ -21,7 +21,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.difficultSlider.setRange(0, 5)
         self.difficultSlider.setValue(3)
 
-
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
         self.fireTasksFrame.setVisible(False)
@@ -30,7 +29,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             for i in range(4):
                 data = filemanagment.read_curr()[j].split('.')
                 self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
-
+        filemanagment.m_to_fired()
     def __clear(self):
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
@@ -49,6 +48,10 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def fire_task(self):
         self.__clear()
         self.fireTasksFrame.setVisible(True)
+        for j in range(len(filemanagment.read_fired())):
+            for i in range(4):
+                data = filemanagment.read_fired()[j].split('.')
+                self.firedTable.setItem(j, i, QTableWidgetItem(data[i]))
 
     def week_task(self):
         self.__clear()
@@ -60,7 +63,15 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def save(self):
         times = self.deadlineTime.date().toPyDate()
-        filemanagment.wr_to_main_file(str(self.lineInputTask.text()), str(times), str(self.difficultSlider.value()), str(self.resoursesList.toPlainText()))
+        filemanagment.wr_to_main_file(str(self.lineInputTask.text()), str(times), str(self.difficultSlider.value()), str(self.resoursesList.toPlainText()).replace("\n", '&'))
+        self.__clear()
+        self.tableWidget.setVisible(True)
+        msg = QtWidgets.QMessageBox()
+        msg.setText('Task '+ self.lineInputTask.text() + ' added')
+        msg.setStyleSheet("font: 75 14pt \"MS Shell Dlg 2\";\n"
+"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(170, 255, 213, 255), stop:1 rgba(184, 170, 255, 255));\n"
+"border-radius:15px;")
+        msg.exec()
 
 
 def main():
