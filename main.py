@@ -17,6 +17,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.weekButton.clicked.connect(self.week_task)
         self.archiveButton.clicked.connect(self.arc_task)
         self.bthAdd.clicked.connect(self.save)
+        self.tableWidget.itemDoubleClicked.connect(self.ready_task)
 
         self.difficultSlider.setRange(0, 5)
         self.difficultSlider.setValue(3)
@@ -27,9 +28,15 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.weekFrame.setVisible(False)
         for j in range(len(filemanagment.read_curr())):
             for i in range(4):
-                data = filemanagment.read_curr()[j].split('.')
-                self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
+                print(len(filemanagment.read_curr()))
+                if len(filemanagment.read_curr()) == 26:
+                    self.tableWidget.setItem(0, 0, QTableWidgetItem(''))
+                else:
+                    data = filemanagment.read_curr()[j].split('.')
+
+                    self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
         filemanagment.m_to_fired()
+        filemanagment.m_to_archive()
     def __clear(self):
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
@@ -50,12 +57,21 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.fireTasksFrame.setVisible(True)
         for j in range(len(filemanagment.read_fired())):
             for i in range(4):
-                data = filemanagment.read_fired()[j].split('.')
-                self.firedTable.setItem(j, i, QTableWidgetItem(data[i]))
+                print(len(filemanagment.read_fired()))
+                if len(filemanagment.read_fired()) == 1:
+                    self.firedTable.setItem(0, 0, QTableWidgetItem(''))
+                else:
+                    data = filemanagment.read_fired()[j].split('.')
+                    self.firedTable.setItem(j, i, QTableWidgetItem(data[i]))
 
     def week_task(self):
         self.__clear()
         self.weekFrame.setVisible(True)
+        for j in range(len(filemanagment.week_tasks())):
+            for i in range(4):
+                data = filemanagment.week_tasks()[j].split('.')
+                print(data)
+                self.mainTasksView.setItem(j, i, QTableWidgetItem(data[i]))
 
     def arc_task(self):
         self.__clear()
@@ -72,6 +88,14 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(170, 255, 213, 255), stop:1 rgba(184, 170, 255, 255));\n"
 "border-radius:15px;")
         msg.exec()
+
+    def ready_task(self):
+        row = self.tableWidget.currentRow()
+        if row > -1:  # Если есть выделенная строка/элемент
+            self.tableWidget.removeRow(row)
+            # Следующий вызов нужен для того, чтобы
+            # сбросить индекс выбранной строки (чтобы currentRow установился в -1)
+            self.tableWidget.selectionModel().clearCurrentIndex()
 
 
 def main():
