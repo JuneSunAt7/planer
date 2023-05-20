@@ -45,20 +45,17 @@ def read_arc():
     s = ''
     with open('ARC.csv', newline='', encoding='utf-8') as csvfile:
         for line in csvfile:
-            columns = line.split(',')
-            s += str(columns[0] + ' ' + columns[1] + ' ' + columns[2] + ' ' + columns[3]).replace('"', '')
-    s = s.replace("task deadline diff resources", '')
+            columns = line.split(';')
+            s += str('Task: '+columns[0] + ' ' + columns[1] + ' ' + columns[2] + ' ' + columns[3]+ ' archived: ' + columns[4] + '\n').replace('"', '')
+    print(s)
 
-    s = s.replace("\n", ',')
-    parse = s.strip('[]').replace("\r", "").split(',')
-    parse.pop(0)
-    print(parse)
-
-    return parse
+    return s
 
 def m_to_archive():
     with open('CURR.csv', 'r', encoding='utf-8') as f:
-        lines = f.readlines()
+        lines = f.read().split()
+        print('lines')
+        print(lines)
     s = ''
     with open('CURR.csv', 'r', encoding='utf-8') as source:
         for line in source:
@@ -67,14 +64,16 @@ def m_to_archive():
             date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
             if (date_object - curr_date).days < 0:
                 s += columns[0] + '.' + columns[1] + '.' + columns[2] + '.' + columns[3]
+
                 with open('ARC.csv', 'a+', encoding='utf-8') as arc:
                     arc.write(line + ';' + str(curr_date) + '\n')
-
-                print('lines')
-                print(lines)
+                lines.remove(line.replace('\n', ''))
 
     s = s.replace("\n", ',')
     parse = s.strip('[]').replace("\r", "").split(',')
+    with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
+        for elem in lines:
+            rewrite.write(elem)
 
 
 
@@ -105,7 +104,8 @@ def week_tasks():
     return parse
 
 def delete():
-    pass
+    with open('ARC.csv', 'w', encoding='utf-8') as delMe:
+        delMe.write('')
 
 
 def rm_all():

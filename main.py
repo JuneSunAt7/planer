@@ -5,7 +5,7 @@ import filemanagment
 from PyQt5.QtWidgets import QTableWidgetItem
 from datetime import datetime
 from PyQt5 import QtGui
-from PyQt5 import QtWidgets
+
 # нам понадобится модуль winextras
 from PyQt5.QtWinExtras import QWinTaskbarButton,QWinTaskbarProgress
 
@@ -22,6 +22,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.archiveButton.clicked.connect(self.arc_task)
         self.bthAdd.clicked.connect(self.save)
         self.tableWidget.itemDoubleClicked.connect(self.ready_task)
+        self.delArchive.clicked.connect(self.deleteArc)
 
         self.difficultSlider.setRange(0, 5)
         self.difficultSlider.setValue(3)
@@ -40,6 +41,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
                     self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
         filemanagment.m_to_archive()
+
     def __clear(self):
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
@@ -82,6 +84,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def arc_task(self):
         self.__clear()
         self.archiveData.setVisible(True)
+        self.arcTaskView.setText(filemanagment.read_arc())
 
     def save(self):
         times = self.deadlineTime.date().toPyDate()
@@ -97,14 +100,29 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def ready_task(self):
         row = self.tableWidget.currentRow()
-        if row > -1:  # Если есть выделенная строка/элемент
+        if row > -1:
             self.tableWidget.removeRow(row)
-            # Следующий вызов нужен для того, чтобы
-            # сбросить индекс выбранной строки (чтобы currentRow установился в -1)
             self.tableWidget.selectionModel().clearCurrentIndex()
+
+    def deleteArc(self):
+        filemanagment.delete()
+        self.__clear()
+        self.tableWidget.setVisible(True)
+        msg = QtWidgets.QMessageBox()
+        msg.setText('Archive deleted')
+        msg.setStyleSheet("font: 75 14pt \"MS Shell Dlg 2\";\n"
+                          "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(170, 255, 213, 255), stop:1 rgba(184, 170, 255, 255));\n"
+                          "border-radius:15px;")
+        msg.exec()
 
 
 def main():
+    try:
+        from ctypes import windll  # Only exists on Windows.
+        myappid = 'gem13.PlanerJet.Alone.1.'
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except ImportError:
+        pass
     filemanagment.read_curr()
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon('alone.ico'))
