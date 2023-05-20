@@ -4,6 +4,10 @@ import design
 import filemanagment
 from PyQt5.QtWidgets import QTableWidgetItem
 from datetime import datetime
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+# нам понадобится модуль winextras
+from PyQt5.QtWinExtras import QWinTaskbarButton,QWinTaskbarProgress
 
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
@@ -35,7 +39,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     data = filemanagment.read_curr()[j].split('.')
 
                     self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
-        filemanagment.m_to_fired()
         filemanagment.m_to_archive()
     def __clear(self):
         self.frame.setVisible(False)
@@ -69,9 +72,12 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.weekFrame.setVisible(True)
         for j in range(len(filemanagment.week_tasks())):
             for i in range(4):
-                data = filemanagment.week_tasks()[j].split('.')
-                print(data)
-                self.mainTasksView.setItem(j, i, QTableWidgetItem(data[i]))
+                if len(filemanagment.week_tasks()) == 1:
+                    self.mainTasksView.setItem(0, 0, QTableWidgetItem(''))
+                else:
+                    data = filemanagment.week_tasks()[j].split('.')
+                    print(data)
+                    self.mainTasksView.setItem(j, i, QTableWidgetItem(data[i]))
 
     def arc_task(self):
         self.__clear()
@@ -101,7 +107,9 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 def main():
     filemanagment.read_curr()
     app = QtWidgets.QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon('alone.ico'))
     window = ExampleApp()
+    window.setWindowIcon(QtGui.QIcon('alone.ico'))
     window.show()
     window.setFixedSize(940, 732)
     app.exec_()

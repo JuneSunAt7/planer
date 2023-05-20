@@ -249,7 +249,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("PlanerJet", "PlanerJet"))
+        MainWindow.setWindowTitle(_translate("PlanerJet Alone", "PlanerJet Alone"))
         self.addButton.setText(_translate("MainWindow", "+"))
         self.currButton.setText(_translate("MainWindow", "Current"))
         self.fireTaskButton.setText(_translate("MainWindow", "Fire tasks"))
