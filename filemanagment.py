@@ -13,8 +13,11 @@ def read_curr():
     with open('CURR.csv', newline='', encoding='utf-8') as csvfile:
         for line in csvfile:
             columns = line.split(';')
-            s += columns[0] + '.' +columns[1]+'.'+columns[2]+'.'+columns[3]
-            print(s)
+            if columns == ['\r\n']:
+                pass
+            else:
+                s += columns[0] + '.' +columns[1]+'.'+columns[2]+'.'+columns[3]
+                print(s)
     s = s.replace("task deadline diff resources", '')
 
     s = s.replace("\n", ',')
@@ -27,12 +30,16 @@ def read_fired():
     s = ''
     with open('CURR.csv', 'r', encoding='utf-8') as source:
         for line in source:
+
             columns = line.split(';')
-            curr_date = datetime.date.today()
-            date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
-            if (date_object - curr_date).days <= 4:
-                if (date_object - curr_date).days > 0:
-                    s += columns[0] + '.' + columns[1] + '.' + columns[2] + '.' + columns[3]
+            if columns == ['\n']:
+                pass
+            else:
+                curr_date = datetime.date.today()
+                date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
+                if (date_object - curr_date).days <= 4:
+                    if (date_object - curr_date).days > 0:
+                        s += columns[0] + '.' + columns[1] + '.' + columns[2] + '.' + columns[3]
     s = s.replace("task deadline diff resources", '')
 
     s = s.replace("\n", ',')
@@ -46,7 +53,7 @@ def read_arc():
     with open('ARC.csv', newline='', encoding='utf-8') as csvfile:
         for line in csvfile:
             columns = line.split(';')
-            s += str('Task: '+columns[0] + ' ' + columns[1] + ' ' + columns[2] + ' ' + columns[3]+ ' archived: ' + columns[4] + '\n').replace('"', '')
+            s += str('Task: '+columns[0] + ' archived: ' + columns[4] + '\n').replace('"', '')
     print(s)
 
     return s
@@ -60,20 +67,22 @@ def m_to_archive():
     with open('CURR.csv', 'r', encoding='utf-8') as source:
         for line in source:
             columns = line.split(';')
-            curr_date = datetime.date.today()
-            date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
-            if (date_object - curr_date).days < 0:
-                s += columns[0] + '.' + columns[1] + '.' + columns[2] + '.' + columns[3]
+            if columns == ['\n']:
+                pass
+            else:
+                curr_date = datetime.date.today()
+                date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
+                if (date_object - curr_date).days < 0:
+                    s += columns[0] + '.' + columns[1] + '.' + columns[2] + '.' + columns[3]
 
-                with open('ARC.csv', 'a+', encoding='utf-8') as arc:
-                    arc.write(line + ';' + str(curr_date) + '\n')
-                lines.remove(line.replace('\n', ''))
+                    with open('ARC.csv', 'a+', encoding='utf-8') as arc:
+                        arc.write(line + ';' + str(curr_date) + '\n')
 
     s = s.replace("\n", ',')
     parse = s.strip('[]').replace("\r", "").split(',')
     with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
         for elem in lines:
-            rewrite.write(elem)
+            rewrite.write('\n'+elem)
 
 
 
@@ -91,11 +100,14 @@ def week_tasks():
     with open('CURR.csv', 'r', encoding='utf-8') as source:
         for line in source:
             columns = line.split(';')
-            curr_date = datetime.date.today()
-            date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
-            if (date_object - curr_date).days <= 7:
-                if (date_object - curr_date).days > 0:
-                    s += columns[0] + '.' +columns[1]+'.'+columns[2]+'.'+columns[3]
+            if columns == ['\n']:
+                pass
+            else:
+                curr_date = datetime.date.today()
+                date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
+                if (date_object - curr_date).days <= 7:
+                    if (date_object - curr_date).days > 0:
+                        s += columns[0] + '.' +columns[1]+'.'+columns[2]+'.'+columns[3]
     s = s.replace("task deadline diff resources", '')
 
     s = s.replace("\n", ',')

@@ -5,6 +5,8 @@ import filemanagment
 from PyQt5.QtWidgets import QTableWidgetItem
 from datetime import datetime
 from PyQt5 import QtGui
+import time
+import datetime
 
 # нам понадобится модуль winextras
 from PyQt5.QtWinExtras import QWinTaskbarButton,QWinTaskbarProgress
@@ -40,6 +42,10 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     data = filemanagment.read_curr()[j].split('.')
 
                     self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
+                    curr_date = datetime.date.today()
+                    date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
+                    timeTask = str((date_object-curr_date).days) + ' days'
+                    self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
         filemanagment.m_to_archive()
 
     def __clear(self):
@@ -114,6 +120,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                           "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(170, 255, 213, 255), stop:1 rgba(184, 170, 255, 255));\n"
                           "border-radius:15px;")
         msg.exec()
+
 
 
 def main():

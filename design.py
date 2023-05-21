@@ -113,6 +113,8 @@ class Ui_MainWindow(object):
 "border-radius: 15px;")
         self.lineInputTask.setObjectName("lineInputTask")
         self.deadlineTime = QtWidgets.QDateTimeEdit(self.frame)
+        currentTime = QtCore.QDateTime.currentDateTime()
+        self.deadlineTime.setDateTime(currentTime.addDays(7))
         self.deadlineTime.setGeometry(QtCore.QRect(160, 90, 251, 41))
         self.deadlineTime.setStyleSheet("font: 75 14pt \"MS Shell Dlg 2\";\n"
 "background-color: rgb(166, 168, 255);\n"
