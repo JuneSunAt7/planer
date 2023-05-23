@@ -1,16 +1,14 @@
+import datetime
 import sys
-from PyQt5 import QtWidgets, uic
+
+import plyer
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QTableWidgetItem
+
 import design
 import filemanagment
-from PyQt5.QtWidgets import QTableWidgetItem
-from datetime import datetime
-from PyQt5 import QtGui
-import time
-import datetime
-
-# нам понадобится модуль winextras
-from PyQt5.QtWinExtras import QWinTaskbarButton,QWinTaskbarProgress
-
+import timemanager
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self):
@@ -25,9 +23,11 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.bthAdd.clicked.connect(self.save)
         self.tableWidget.itemDoubleClicked.connect(self.ready_task)
         self.delArchive.clicked.connect(self.deleteArc)
+        self.tableWidget.itemClicked.connect(self.start_timers)
 
         self.difficultSlider.setRange(0, 5)
         self.difficultSlider.setValue(3)
+
 
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
@@ -45,9 +45,16 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     curr_date = datetime.date.today()
                     date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
                     timeTask = str((date_object-curr_date).days) + ' days'
+                    timer = (date_object-curr_date).days
+                    if timer <= 3:
+                        plyer.notification.notify(message='Time to execute ' + str(data[0] + ' will end soon!'),
+                                                  app_name='PlanerJet Alone',
+                                                  title='Archive', )
+
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
         if len(filemanagment.read_curr()) != 0:
             filemanagment.m_to_archive()
+
 
     def __clear(self):
         self.frame.setVisible(False)
@@ -60,9 +67,24 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.__clear()
         self.frame.setVisible(True)
 
+
     def current_task(self):
         self.__clear()
         self.tableWidget.setVisible(True)
+        for j in range(len(filemanagment.read_curr())):
+            for i in range(4):
+                print(len(filemanagment.read_curr()))
+                if len(filemanagment.read_curr()) == 26:
+                    self.tableWidget.setItem(0, 0, QTableWidgetItem(''))
+                else:
+                    data = filemanagment.read_curr()[j].split('.')
+
+                    self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
+                    curr_date = datetime.date.today()
+                    date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
+                    timeTask = str((date_object-curr_date).days) + ' days'
+                    self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
+
 
     def fire_task(self):
         self.__clear()
@@ -105,13 +127,38 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(170, 255, 213, 255), stop:1 rgba(184, 170, 255, 255));\n"
 "border-radius:15px;")
         msg.exec()
+        for j in range(len(filemanagment.read_curr())):
+            for i in range(4):
+                print(len(filemanagment.read_curr()))
+                if len(filemanagment.read_curr()) == 26:
+                    self.tableWidget.setItem(0, 0, QTableWidgetItem(''))
+                else:
+                    data = filemanagment.read_curr()[j].split('.')
+
+                    self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
+                    curr_date = datetime.date.today()
+                    date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
+                    timeTask = str((date_object-curr_date).days) + ' days'
+                    self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
 
     def ready_task(self):
         row = self.tableWidget.currentRow()
+        filemanagment.move_to_arch_custom(row, self.tableWidget.item(row, 0).text())
         if row > -1:
             self.tableWidget.removeRow(row)
             self.tableWidget.selectionModel().clearCurrentIndex()
-            filemanagment.move_to_arch_custom(row)
+
+    def start_timers(self):
+        row = self.tableWidget.currentRow()
+        self.tableWidget.item(row,0).setBackground(QtGui.QColor(150, 255, 70))
+        self.tableWidget.item(row, 1).setBackground(QtGui.QColor(150, 255, 70))
+        self.tableWidget.item(row, 2).setBackground(QtGui.QColor(150, 255, 70))
+        self.tableWidget.item(row, 3).setBackground(QtGui.QColor(150, 255, 70))
+        self.tableWidget.item(row, 4).setBackground(QtGui.QColor(150, 255, 70))
+
+        timemanager.time_count(self.tableWidget.item(row,0).text())
+
+
 
     def deleteArc(self):
         filemanagment.delete()

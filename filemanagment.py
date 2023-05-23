@@ -53,7 +53,7 @@ def read_arc():
     with open('ARC.csv', newline='', encoding='utf-8') as csvfile:
         for line in csvfile:
             columns = line.split(';')
-            s += str('Task: '+columns[0] + ' archived: ' + columns[4] + '\n').replace('"', '')
+            s += str('Task: '+columns[0] + ' archived: ' + columns[1] + '\n').replace('"', '')
     print(s)
 
     return s
@@ -79,26 +79,25 @@ def m_to_archive():
                                               title='Archive', )
 
                     with open('ARC.csv', 'a+', encoding='utf-8') as arc:
-                        arc.write(line + ';' + str(curr_date) + '\n')
+                        arc.write(columns[0] + ';' + str(curr_date) + '\n')
                     lines.remove(line.replace('\n', ''))
     s = s.replace("\n", ',')
-    parse = s.strip('[]').replace("\r", "").split(',')
     with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
         for elem in lines:
             rewrite.write('\n'+elem)
 
 
-def move_to_arch_custom(element):
+def move_to_arch_custom(element, data):
     with open('CURR.csv', 'r', encoding='utf-8') as f:
         lines = f.read().split()
         print('lines')
         print(lines)
         print(str(element))
     curr_date = datetime.date.today()
-    plyer.notification.notify(message='Task ' + str(element) + ' moved to archive', app_name='PlanerJet Alone', title='Archive', )
+    plyer.notification.notify(message='Task ' + str(data) + ' moved to archive', app_name='PlanerJet Alone', title='Archive', )
     lines.pop(element)
     with open('ARC.csv', 'a+', encoding='utf-8') as arc:
-        arc.write(str(element) + ';' + str(curr_date) + '\n')
+        arc.write(str(data) + ';' + str(curr_date) + '\n')
     with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
         for elem in lines:
             rewrite.write('\n'+elem)
@@ -107,7 +106,7 @@ def move_to_arch_custom(element):
 
 
 def wr_to_main_file(taskname, deadline, diff, resources):
-    data = taskname+';'+ deadline+';'+ diff+';'+ str(resources)
+    data = str(taskname)+';'+ deadline+';'+ diff+';'+ str(resources)
 
     with open('CURR.csv', 'a', encoding='utf-8') as file:
         file.write('\n'+data)
