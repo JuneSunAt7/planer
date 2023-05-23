@@ -1,3 +1,3 @@
-Простой планер для простых людей
-Напомнит вам о горящих задачах, о том, что вас ждёт на неделе, а так же будет вас оповещать о задачах с приближающимся дедлайном
-![image](https://github.com/JuneSunAt7/planer/assets/63651740/47f9dbf5-7661-441c-91bc-eb007147a613)
+![image](https://github.com/JuneSunAt7/planer/assets/63651740/9eb133d6-b1b5-429b-ad83-543ae134a915)
+![image](https://github.com/JuneSunAt7/planer/assets/63651740/daadf99f-4ab4-45df-851a-e974c76b0d90)
+![image](https://github.com/JuneSunAt7/planer/assets/63651740/cb58b975-331c-4385-81f2-29b73ebf83b7)
