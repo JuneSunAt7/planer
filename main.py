@@ -46,7 +46,8 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
                     timeTask = str((date_object-curr_date).days) + ' days'
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
-        filemanagment.m_to_archive()
+        if len(filemanagment.read_curr()) != 0:
+            filemanagment.m_to_archive()
 
     def __clear(self):
         self.frame.setVisible(False)
@@ -68,9 +69,9 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.fireTasksFrame.setVisible(True)
         for j in range(len(filemanagment.read_fired())):
             for i in range(4):
-                print(len(filemanagment.read_fired()))
-                if len(filemanagment.read_fired()) == 1:
-                    self.firedTable.setItem(0, 0, QTableWidgetItem(''))
+                print(filemanagment.read_fired())
+                if filemanagment.read_fired() == ['']:
+                    pass
                 else:
                     data = filemanagment.read_fired()[j].split('.')
                     self.firedTable.setItem(j, i, QTableWidgetItem(data[i]))
@@ -80,8 +81,9 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.weekFrame.setVisible(True)
         for j in range(len(filemanagment.week_tasks())):
             for i in range(4):
-                if len(filemanagment.week_tasks()) == 1:
-                    self.mainTasksView.setItem(0, 0, QTableWidgetItem(''))
+                print(filemanagment.week_tasks())
+                if filemanagment.week_tasks() == ['']:
+                    pass
                 else:
                     data = filemanagment.week_tasks()[j].split('.')
                     print(data)
@@ -109,6 +111,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         if row > -1:
             self.tableWidget.removeRow(row)
             self.tableWidget.selectionModel().clearCurrentIndex()
+            filemanagment.move_to_arch_custom(row)
 
     def deleteArc(self):
         filemanagment.delete()

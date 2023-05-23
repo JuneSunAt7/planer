@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets  # for message about errors
 import datetime
 import re
 import pandas as pd
-
+import plyer
 
 def read_curr():
     s = ''
@@ -74,10 +74,13 @@ def m_to_archive():
                 date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
                 if (date_object - curr_date).days < 0:
                     s += columns[0] + '.' + columns[1] + '.' + columns[2] + '.' + columns[3]
+                    plyer.notification.notify(message='Task ' + str(columns[0] + ' moved to archive'),
+                                              app_name='PlanerJet Alone',
+                                              title='Archive', )
 
                     with open('ARC.csv', 'a+', encoding='utf-8') as arc:
                         arc.write(line + ';' + str(curr_date) + '\n')
-
+                    lines.remove(line.replace('\n', ''))
     s = s.replace("\n", ',')
     parse = s.strip('[]').replace("\r", "").split(',')
     with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
@@ -85,6 +88,20 @@ def m_to_archive():
             rewrite.write('\n'+elem)
 
 
+def move_to_arch_custom(element):
+    with open('CURR.csv', 'r', encoding='utf-8') as f:
+        lines = f.read().split()
+        print('lines')
+        print(lines)
+        print(str(element))
+    curr_date = datetime.date.today()
+    plyer.notification.notify(message='Task ' + str(element) + ' moved to archive', app_name='PlanerJet Alone', title='Archive', )
+    lines.pop(element)
+    with open('ARC.csv', 'a+', encoding='utf-8') as arc:
+        arc.write(str(element) + ';' + str(curr_date) + '\n')
+    with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
+        for elem in lines:
+            rewrite.write('\n'+elem)
 
 
 
@@ -106,7 +123,7 @@ def week_tasks():
                 curr_date = datetime.date.today()
                 date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
                 if (date_object - curr_date).days <= 7:
-                    if (date_object - curr_date).days > 0:
+                    if (date_object - curr_date).days >= 0:
                         s += columns[0] + '.' +columns[1]+'.'+columns[2]+'.'+columns[3]
     s = s.replace("task deadline diff resources", '')
 
