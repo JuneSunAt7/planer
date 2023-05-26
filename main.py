@@ -33,6 +33,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.archiveData.setVisible(False)
         self.fireTasksFrame.setVisible(False)
         self.weekFrame.setVisible(False)
+        data = ''
         for j in range(len(filemanagment.read_curr())):
             for i in range(4):
                 print(len(filemanagment.read_curr()))
@@ -50,10 +51,21 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                         plyer.notification.notify(message='Time to execute ' + str(data[0] + ' will end soon!'),
                                                   app_name='PlanerJet Alone',
                                                   title='Archive', )
-
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
+                    with open('stat.pj', 'r', encoding='utf-8') as timetracker:
+                        for line in timetracker:
+                            columns = line.split(';')
+                            if columns == ['\r\n']:
+                                pass
+                            else:
+                                if columns[0] == data[0]:
+                                    self.tableWidget.item(j, i).setBackground(QtGui.QColor(150, 255, 70))
+                                    self.tableWidget.item(j,4).setBackground(QtGui.QColor(150, 255, 70))
+
         if len(filemanagment.read_curr()) != 0:
             filemanagment.m_to_archive()
+
+        self.time_tracker()
 
 
     def __clear(self):
@@ -66,6 +78,14 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def add_task(self):
         self.__clear()
         self.frame.setVisible(True)
+
+    def time_tracker(self):
+        with open('stat.pj', 'r', encoding='utf-8') as timetracker:
+            for line in timetracker:
+                columns = line.split(';')
+                if columns == ['\r\n']:
+                    pass
+
 
 
     def current_task(self):
@@ -86,6 +106,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
 
 
+
     def fire_task(self):
         self.__clear()
         self.fireTasksFrame.setVisible(True)
@@ -96,7 +117,10 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     pass
                 else:
                     data = filemanagment.read_fired()[j].split('.')
-                    self.firedTable.setItem(j, i, QTableWidgetItem(data[i]))
+                    if data == ['']:
+                        pass
+                    else:
+                        self.firedTable.setItem(j, i, QTableWidgetItem(data[i]))
 
     def week_task(self):
         self.__clear()

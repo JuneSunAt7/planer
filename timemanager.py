@@ -12,16 +12,9 @@ def time_count(task):
         timer.write('\n'+str(task) + ';' + timer_start.strftime('%Y-%m-%d %H-%M'))
 
 
-def readig_and_colour():
-    s = ''
-    with open('stat.pj', 'r', encoding='utf-8') as data:
-        for line in data:
-            columns = line.split(';')
-            if columns == ['\r\n']:
-                pass
-            else:
-                s += columns[0]
-                print(s)
+def timer_end(task):
+    pass
+
 
 def statistics():
     pass
