@@ -48,9 +48,10 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     timeTask = str((date_object-curr_date).days) + ' days'
                     timer = (date_object-curr_date).days
                     if timer <= 3:
-                        plyer.notification.notify(message='Time to execute ' + str(data[0] + ' will end soon!'),
-                                                  app_name='PlanerJet Alone',
-                                                  title='Archive', )
+                        if i < 1:
+                            plyer.notification.notify(message='Time to execute ' + str(data[0] + ' will end soon!'),
+                                                      app_name='PlanerJet Alone',
+                                                      title='Archive', )
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
                     with open('stat.pj', 'r', encoding='utf-8') as timetracker:
                         for line in timetracker:
@@ -58,9 +59,9 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                             if columns == ['\r\n']:
                                 pass
                             else:
-                                if columns[0] == data[0]:
-                                    self.tableWidget.item(j, i).setBackground(QtGui.QColor(150, 255, 70))
-                                    self.tableWidget.item(j,4).setBackground(QtGui.QColor(150, 255, 70))
+                                if columns[0] == data[i]:
+                                    self.tableWidget.item(j, 0).setBackground(QtGui.QColor(150, 255, 70))
+
 
         if len(filemanagment.read_curr()) != 0:
             filemanagment.m_to_archive()
@@ -104,6 +105,18 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
                     timeTask = str((date_object-curr_date).days) + ' days'
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
+                    with open('stat.pj', 'r', encoding='utf-8') as timetracker:
+                        for line in timetracker:
+                            columns = line.split(';')
+                            if columns == ['\r\n']:
+                                pass
+                            else:
+                                if columns[0] == data[i]:
+                                    self.tableWidget.item(j, 0).setBackground(QtGui.QColor(150, 255, 70))
+                                    self.tableWidget.item(j, 1).setBackground(QtGui.QColor(150, 255, 70))
+                                    self.tableWidget.item(j, 2).setBackground(QtGui.QColor(150, 255, 70))
+                                    self.tableWidget.item(j, 3).setBackground(QtGui.QColor(150, 255, 70))
+                                    self.tableWidget.item(j, 4).setBackground(QtGui.QColor(150, 255, 70))
 
 
 
@@ -139,6 +152,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.__clear()
         self.archiveData.setVisible(True)
         self.arcTaskView.setText(filemanagment.read_arc())
+        timemanager.statistics()
 
     def save(self):
         times = self.deadlineTime.date().toPyDate()
@@ -168,6 +182,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def ready_task(self):
         row = self.tableWidget.currentRow()
         filemanagment.move_to_arch_custom(row, self.tableWidget.item(row, 0).text())
+        timemanager.timer_end(self.tableWidget.item(row,0).text())
         if row > -1:
             self.tableWidget.removeRow(row)
             self.tableWidget.selectionModel().clearCurrentIndex()
@@ -175,10 +190,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def start_timers(self):
         row = self.tableWidget.currentRow()
         self.tableWidget.item(row,0).setBackground(QtGui.QColor(150, 255, 70))
-        self.tableWidget.item(row, 1).setBackground(QtGui.QColor(150, 255, 70))
-        self.tableWidget.item(row, 2).setBackground(QtGui.QColor(150, 255, 70))
-        self.tableWidget.item(row, 3).setBackground(QtGui.QColor(150, 255, 70))
-        self.tableWidget.item(row, 4).setBackground(QtGui.QColor(150, 255, 70))
 
         timemanager.time_count(self.tableWidget.item(row,0).text())
 
