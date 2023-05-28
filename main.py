@@ -66,7 +66,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         if len(filemanagment.read_curr()) != 0:
             filemanagment.m_to_archive()
 
-        self.time_tracker()
 
 
     def __clear(self):
@@ -80,12 +79,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.__clear()
         self.frame.setVisible(True)
 
-    def time_tracker(self):
-        with open('stat.pj', 'r', encoding='utf-8') as timetracker:
-            for line in timetracker:
-                columns = line.split(';')
-                if columns == ['\r\n']:
-                    pass
 
 
 
@@ -169,7 +162,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             for i in range(4):
                 print(len(filemanagment.read_curr()))
                 if len(filemanagment.read_curr()) == 26:
-                    self.tableWidget.setItem(0, 0, QTableWidgetItem(''))
+                    pass
                 else:
                     data = filemanagment.read_curr()[j].split('.')
 

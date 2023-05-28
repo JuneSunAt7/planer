@@ -61,9 +61,11 @@ class Ui_MainWindow(object):
 "border-radius:15px;")
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(5)
+
         self.tableWidget.setRowCount(len(filemanagment.read_curr()))
         item = QtWidgets.QTableWidgetItem()
         for i in range(len(filemanagment.read_curr())):
+
             self.tableWidget.setVerticalHeaderItem(i, item)
             item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
