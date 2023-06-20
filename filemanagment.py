@@ -21,7 +21,8 @@ def read_curr():
     s = s.replace("task deadline diff resources", '')
 
     s = s.replace("\n", ',')
-    parse = s.strip('[]').replace("\r", "").split(',')
+    parse = s.strip('[]').split(',')
+    print(parse)
 
     return parse
 
@@ -60,7 +61,7 @@ def read_arc():
 
 def m_to_archive():
     with open('CURR.csv', 'r', encoding='utf-8') as f:
-        lines = f.read().split()
+        lines = f.read().split('\n')
         print('lines')
         print(lines)
     s = ''
@@ -81,10 +82,10 @@ def m_to_archive():
                     with open('ARC.csv', 'a+', encoding='utf-8') as arc:
                         arc.write(columns[0] + ';' + str(curr_date) + '\n')
                     lines.remove(line.replace('\n', ''))
-    s = s.replace("\n", ',')
-    with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
-        for elem in lines:
-            rewrite.write('\n'+elem)
+                    s = s.replace("\n", ',')
+                    with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
+                        for elem in lines:
+                            rewrite.write('\n'+elem)
 
 
 def move_to_arch_custom(element, data):
@@ -98,15 +99,15 @@ def move_to_arch_custom(element, data):
     lines.pop(element)
     with open('ARC.csv', 'a+', encoding='utf-8') as arc:
         arc.write(str(data) + ';' + str(curr_date) + '\n')
-    with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
-        for elem in lines:
-            rewrite.write('\n'+elem)
+        with open('CURR.csv', 'w', encoding='utf-8') as rewrite:
+            for elem in lines:
+                rewrite.write('\n'+elem)
 
 
 
 
 def wr_to_main_file(taskname, deadline, diff, resources):
-    data = str(taskname)+';'+ deadline+';'+ diff+';'+ str(resources)
+    data = str(taskname).replace('\n', ' ').replace(',', ' ')+';'+ deadline+';'+ diff+';'+ str(resources).replace('\n', ' ').replace(',', ' ')
 
     with open('CURR.csv', 'a', encoding='utf-8') as file:
         file.write('\n'+data)
@@ -134,6 +135,7 @@ def week_tasks():
 def delete():
     with open('ARC.csv', 'w', encoding='utf-8') as delMe:
         delMe.write('')
+
 
 
 def rm_all():

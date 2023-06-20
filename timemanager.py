@@ -63,10 +63,11 @@ def statistics():
 
     plt.xlabel('Tasks')
     plt.ylabel('Hours')
-    plt.bar(x=names, height=memory)
-
+    plt.bar(x=names, height=memory, color=['green'])
+    plt.title('Statistics')
     plt.show()
 
 
 def computer_time():
+
     pass

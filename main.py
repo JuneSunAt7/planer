@@ -2,6 +2,7 @@ import datetime
 import sys
 
 import plyer
+from threading import Thread
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem
@@ -9,6 +10,7 @@ from PyQt5.QtWidgets import QTableWidgetItem
 import design
 import filemanagment
 import timemanager
+import botapi
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self):
@@ -28,7 +30,6 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.difficultSlider.setRange(0, 5)
         self.difficultSlider.setValue(3)
 
-
         self.frame.setVisible(False)
         self.archiveData.setVisible(False)
         self.fireTasksFrame.setVisible(False)
@@ -38,11 +39,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             for i in range(4):
                 print(len(filemanagment.read_curr()))
                 if len(filemanagment.read_curr()) == 26:
-                    self.tableWidget.setItem(0, 0, QTableWidgetItem(''))
+
+                    self.tableWidget.setRowCount(0)
                 else:
                     data = filemanagment.read_curr()[j].split('.')
 
                     self.tableWidget.setItem(j, i, QTableWidgetItem(data[i]))
+                    self.tableWidget.item(j,i).setToolTip(data[i])
                     curr_date = datetime.date.today()
                     date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
                     timeTask = str((date_object-curr_date).days) + ' days'
@@ -65,6 +68,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         if len(filemanagment.read_curr()) != 0:
             filemanagment.m_to_archive()
+
 
 
 
@@ -98,6 +102,7 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     date_object = datetime.datetime.strptime(data[1], '%Y-%m-%d').date()
                     timeTask = str((date_object-curr_date).days) + ' days'
                     self.tableWidget.setItem(j, 4, QTableWidgetItem(timeTask))
+
                     with open('stat.pj', 'r', encoding='utf-8') as timetracker:
                         for line in timetracker:
                             columns = line.split(';')
