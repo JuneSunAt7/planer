@@ -2,17 +2,63 @@
 
 import telebot
 import filemanagment
+from telebot import types
+import timemanager
+timemanager.gant_stat()
 
 bot = telebot.TeleBot('')
 
-from telebot import types
 
 def week_function():
+    msg = ''
     data = filemanagment.week_tasks()
-    if len(data) == 0:
-        return 'You have no tasks for this week! To add it, you need to use the PlanerJet program.'
+    if data == ['']:
+        return 'You havent tasks for this week! To add it, you need to use the PlanerJet program.'
     else:
-        return data
+        for j in range(len(filemanagment.week_tasks())):
+
+            print(filemanagment.week_tasks())
+            if filemanagment.week_tasks() == ['']:
+                pass
+            else:
+                data = filemanagment.week_tasks()[j].split('.')
+                print(data)
+                msg += 'Task: '+data[0] + '\nDeadline: ' + data[1] + '\nDifficult: ' + data[2]
+            return msg
+
+def fire_function():
+    msg = ''
+    data = filemanagment.read_fired()
+    if data == ['']:
+        return 'You havent fire tasks! To add it, you need to use the PlanerJet program.'
+    else:
+        for j in range(len(filemanagment.read_fired())):
+
+            print(filemanagment.read_fired())
+            if filemanagment.read_fired() == ['']:
+                pass
+            else:
+                data = filemanagment.read_fired()[j].split('.')
+                print(data)
+                msg += 'Task: ' + data[0] + '\nDeadline: ' + data[1] + '\nDifficult: ' + data[2]
+            return msg
+
+def today():
+    msg = ''
+    data = filemanagment.today_tasks()
+    if data == ['']:
+        return 'You havent tasks in today! To add it, you need to use the PlanerJet program.'
+    else:
+        for j in range(len(filemanagment.today_tasks())):
+
+            print(filemanagment.today_tasks())
+            if filemanagment.today_tasks() == ['']:
+                pass
+            else:
+                data = filemanagment.today_tasks()[j].split('.')
+                print(data)
+                msg += 'Task: ' + data[0] + '\nDeadline: ' + data[1] + '\nDifficult: ' + data[2]
+            return msg
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     keyboard = types.InlineKeyboardMarkup()
@@ -37,7 +83,14 @@ def callback_worker(call):
 
         bot.send_message(call.message.chat.id, week_function())
     elif call.data == 'fire':
-        bot.send_message(call.message.chat.id, 'fire')
+        bot.send_message(call.message.chat.id, fire_function())
+
+    elif call.data == 'today':
+        bot.send_message(call.message.chat.id, today())
+
+    elif call.data == 'stat':
+        bot.send_photo(call.message.chat.id, 'tg.png', caption="Gant diagram")
+
 
 
 bot.polling(none_stop=True, interval=0)

@@ -132,6 +132,25 @@ def week_tasks():
 
     return parse
 
+def today_tasks():
+    s = ''
+    with open('CURR.csv', 'r', encoding='utf-8') as source:
+        for line in source:
+            columns = line.split(';')
+            if columns == ['\n']:
+                pass
+            else:
+                curr_date = datetime.date.today()
+                date_object = datetime.datetime.strptime(columns[1], '%Y-%m-%d').date()
+                if date_object == curr_date:
+                    s += columns[0] + '.' +columns[1]+'.'+columns[2]+'.'+columns[3]
+    s = s.replace("task deadline diff resources", '')
+
+    s = s.replace("\n", ',')
+    parse = s.strip('[]').replace("\r", "").split(',')
+
+    return parse
+
 def delete():
     with open('ARC.csv', 'w', encoding='utf-8') as delMe:
         delMe.write('')
