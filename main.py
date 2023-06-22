@@ -2,7 +2,6 @@ import datetime
 import sys
 
 import plyer
-from threading import Thread
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem
@@ -10,7 +9,19 @@ from PyQt5.QtWidgets import QTableWidgetItem
 import design
 import filemanagment
 import timemanager
-import botapi
+import winreg
+import base64
+import uuid
+
+
+def generate_key():
+    clear_key = str(uuid.getnode())
+    b = clear_key.encode("UTF-8")
+    e = base64.b64encode(b)
+    print(str(e))
+    winreg.CreateKey(int(e), 'H_KEY_PJ')
+
+    # registration key in pc
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self):

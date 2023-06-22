@@ -66,13 +66,39 @@ def statistics():
     plt.bar(x=names, height=memory, color=['green'])
     plt.title('Statistics')
     plt.show()
+def get_task():
+    s = []
+    with open('CURR.csv', 'r', encoding='utf-8') as source:
+        for line in source:
+            columns = line.split(';')
+            if columns == ['\n']:
+                pass
+            else:
+                s.append(columns[0])
 
+    return s
+
+
+def get_time():
+    s = []
+    with open('CURR.csv', 'r', encoding='utf-8') as source:
+        for line in source:
+            columns = line.split(';')
+            if columns == ['\n']:
+                pass
+            else:
+                s.append(columns[1])
+
+    return s
+def get_count_curr_time():
+    s = []
+    for i in range(len(get_time())):
+        s.append(str(datetime.date.today()))
+    return s
 def gant_stat():
-    tasks = ['Task A', 'Task B', 'Task C', 'Task D', 'Task E', 'Task F', 'Task G', 'Task H', 'Task I', 'Task J']
-    start_dates = ['2023-02-25', '2023-03-10', '2023-03-13', '2023-03-23', '2023-04-01', '2023-04-05', '2023-04-12',
-                   '2023-04-20', '2023-04-24', '2023-05-02']
-    end_dates = ['2023-03-03', '2023-03-17', '2023-03-22', '2023-03-30', '2023-04-07', '2023-04-18', '2023-04-23',
-                 '2023-04-25', '2023-05-03', '2023-05-07']
+    tasks = get_task()
+    start_dates = get_count_curr_time()
+    end_dates = get_time()
 
     start_dates = [datestr2num(d) for d in start_dates]
     end_dates = [datestr2num(d) for d in end_dates]
@@ -123,27 +149,16 @@ def gant_stat():
     ax.tick_params(axis='both', colors='white')
 
     ax.set_xlabel('Date', color='white', fontsize=12)
-    ax.set_title('Project Schedule', color='white', fontsize=14)
+    ax.set_title('Gant diagram(today - deadline)', color='white', fontsize=14)
 
     # Hide spines so only bottom is visible
     ax.spines['left'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
-    # Create a list of custom patches for the legend
-    legend_elements = [
-        Patch(facecolor=colors[0], label='Planning'),
-        Patch(facecolor=colors[1], label='Development'),
-        Patch(facecolor=colors[2], label='Testing'),
-    ]
-
-    # Add the legend in the top right corner of the plot
-    ax.legend(handles=legend_elements, loc='upper right',
-              facecolor='white',
-              edgecolor='white',
-              fontsize=10, title='Phases', title_fontsize=12, frameon=True)
 
     plt.savefig('tg.png')
+
 
 def computer_time():
 

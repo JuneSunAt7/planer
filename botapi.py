@@ -6,8 +6,12 @@ from telebot import types
 import timemanager
 timemanager.gant_stat()
 
-bot = telebot.TeleBot('')
 
+bot = telebot.TeleBot(token)
+
+def gen_key():
+    pass
+    # that fun read generated key from regedit. key must be generated planerJet
 
 def week_function():
     msg = ''
@@ -89,7 +93,7 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, today())
 
     elif call.data == 'stat':
-        bot.send_photo(call.message.chat.id, 'tg.png', caption="Gant diagram")
+        bot.send_photo(call.message.chat.id, photo=open('tg.png', 'rb'))
 
 
 
