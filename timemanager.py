@@ -73,6 +73,7 @@ def get_task():
             columns = line.split(';')
             if columns == ['\n']:
                 pass
+
             else:
                 s.append(columns[0])
 
@@ -105,12 +106,12 @@ def gant_stat():
 
     durations = [(end - start) for start, end in zip(start_dates, end_dates)]
 
-    fig, ax = plt.subplots(figsize=(15, 8), facecolor='#25253c')
+    fig, ax = plt.subplots(figsize=(15, 8), facecolor='#4653b0')
 
-    ax.set_facecolor('#25253c')
+    ax.set_facecolor('#4653b0')
 
     # Create colours for each task based on categories
-    colors = ['#7a5195', '#ef5675', '#ffa600']
+    colors = ['#8adec0', '#ef5675', '#ffa600']
     task_colors = [colors[0]] * 3 + [colors[1]] * 4 + [colors[2]] * 3
 
     # Display the bars

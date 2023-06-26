@@ -6,6 +6,7 @@ import re
 import pandas as pd
 import plyer
 
+
 def read_curr():
     s = ''
     if int(os.stat('CURR.csv').st_size) == 0:
